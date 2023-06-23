@@ -1,0 +1,32 @@
+{% comment %} <button type="button" class="btn btn-primary" data-mdb-toggle="modal" data-mdb-target="#generalModal">
+  Launch general modal
+</button> {% endcomment %}
+
+<!-- Modal -->
+<div class="modal modal-lg fade" id="generalModal" tabindex="-1" aria-labelledby="generalModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="generalModalLabel"></h5>
+        <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <iframe id="generalModalIframe" src="" title="" style="width: 100%;height:65vh;"></iframe>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+let generalModal;
+document.addEventListener("DOMContentLoaded", () => {
+  generalModal = new mdb.Modal(document.getElementById('generalModal'));
+});
+function showGeneralModal(src, title){
+  document.getElementById("generalModalLabel").innerText = title;
+  document.getElementById("generalModalIframe").src = src;
+  generalModal.show()
+}
+</script>
