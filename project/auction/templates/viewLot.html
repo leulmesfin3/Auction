@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Title</title>
+    <title>View Lot</title>
     <!-- MDB icon -->
     <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon" />
     <!-- Font Awesome -->
@@ -26,7 +26,7 @@
 
     {% include 'sub/header.html' %}
     <main class="pt-5 px-2" style="padding-bottom:57px;" >
-      <div class="container-fluid container-lg  mt-5  px-lg-5">
+      <div class="container-fluid container-lg  mt-5  px-lg-5 bg-white rounded-5" >
         
         
         
@@ -56,6 +56,20 @@
         
         <div class="row bg-white border rounded-5 py-3 my-3">
           <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4 justify-content-center d-flex"><b>00:00:00</b></div>
+            <div class="col-sm-4">
+              <div class="form-group" style="">
+                <label class="control-label" style="font-weight:500;">Item Condition</label>
+                <div class="input-group">
+                  <div class="input-group-prepend" style="background-color: #e9ecef;">
+                    <span class="input-group-text"><i class="fas fa-wrench"></i></span>
+                  </div>
+                  <div class="form-control input text-right">Repairable</div>
+                </div>
+              </div>
+
+            </div>
             <div class="col-12 h-15">
               <div class="row">
                 <div class="col-8">
@@ -82,7 +96,7 @@
               </div>
               <div class="col-12">
                 <div class="alert alert-info" style="padding: 8px 12px">
-                  Login to see Bid Status
+                  <a class="btn d-block btn-outline-secondary" style="font-size: large;" data-mdb-ripple-color="dark" href="#" role="button"> CHAT</a>
                 </div>
               </div>
             </div>
@@ -92,21 +106,21 @@
               <div class="col-12 h-25">
                 <div class="row">
                   <div class="col-12 d-flex align-items-center justify-content-end" style="height: 43px;">
-                    <div class="text-center p-0" style="border-radius: 0.5rem;color: #fff; font-size: small; width: 86px;background-color: #aeb1b4;">Lot</div>
+                    <div class="text-center p-0" style="border-radius: 0.5rem;color: #fff; font-size: small; width: 86px;background-color: #aeb1b4;">Lot 10</div>
                   </div>
                   <div class="col-6">
-                    <div class="form-group" style="width: fit-content;">
+                    <div class="form-group" style="">
                       <label class="control-label" style="font-weight:500;">Bids</label>
                       <div class="input-group">
                         <div class="input-group-prepend" style="background-color: #e9ecef;">
-                          <span class="input-group-text"><b>ETB</b></span>
+                          <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
                         </div>
                         <div class="form-control input text-right">240.00</div>
                       </div>
                     </div>
                   </div>
                   <div class="col-6">
-                    <div class="form-group" style="width: fit-content;">
+                    <div class="form-group" style="">
                       <label class="control-label" style="font-weight:500;">Current price</label>
                       <div class="input-group">
                         <div class="input-group-prepend" style="background-color: #e9ecef;">
@@ -122,7 +136,7 @@
                     <hr>
                   </div>
                   <div class="col-6">
-                    <div class="form-group" style="width: fit-content;">
+                    <div class="form-group" style="">
                       <label class="control-label" style="font-weight:500;">Minimum increase</label>
                       <div class="input-group">
                         <div class="input-group-prepend" style="background-color: #e9ecef;">
@@ -133,7 +147,7 @@
                     </div>
                   </div>
                   <div class="col-6">
-                    <div class="form-group" style="width: fit-content;">
+                    <div class="form-group" style="">
                       <label class="control-label" style="font-weight:500;">Maximum increase</label>
                       <div class="input-group">
                         <div class="input-group-prepend" style="background-color: #e9ecef;">
@@ -146,7 +160,45 @@
                   <div class="col-12">
                     <hr>
                   </div>
+                  <div class="col-6">
+                    <div class="form-group" style="">
+                      <label class="control-label" style="font-weight:500;">Your Rank</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend" style="background-color: #e9ecef;">
+                          <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                        </div>
+                        <div class="form-control input text-right">240.00</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group" style="">
+                      <label class="control-label" style="font-weight:500;">Your Price</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend" style="background-color: #e9ecef;">
+                          <span class="input-group-text"><b>ETB</b></span>
+                        </div>
+                        <div class="form-control input text-right">240.00</div>
+                      </div>
+                    </div>
+                  </div>
                   <div class="col-12">
+                    <hr>
+                  </div>
+                  <div class="col-12">
+                    <div class="form-group" style="">
+                      <label class="control-label" style="font-weight:500;">Your New Price</label>
+                      <div class="input-group">
+                        <div class="input-group-prepend" style="background-color: #e9ecef;">
+                          <span class="input-group-text"><b>ETB</b></span>
+                        </div>
+                        {% comment %} <div class="form-control input text-right"><input type="number" ></div> {% endcomment %}
+                        <div class="form-outline">
+                          <input type="number" class="form-control" placeholder="Input your price here" />
+                        </div>
+                      </div>
+                    </div>
+                    <hr>
                     <div class="d-grid gap-2">
                       <button type="button" class="btn btn-primary mb-3" data-mdb-ripple-color="dark" onclick="javascript: window.location = '/ViewThisLot'; return false;">Process Bid</button>
                     </div>
@@ -155,6 +207,17 @@
               </div>
             </div>
           </div>
+          <hr>
+          <div class="form-group" style="width: 100%%;height: 130px;">
+            <label class="control-label" style="font-weight:500;">Description</label>
+            <div class="input-group h-100" style="max-height:117px;">
+              <div class="input-group-prepend" style="background-color: #e9ecef;height:105px;">
+                <span class="input-group-text " style="height: 105px" ><i class="fas fa-circle-info"></i></span>
+              </div>
+              <div class="form-control input text-right" style="height: 105px; max-height: 117px; overflow-y: auto;">Description goes here</div>
+            </div>
+          </div>
+
         </div>
 
 

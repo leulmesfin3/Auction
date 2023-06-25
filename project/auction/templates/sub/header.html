@@ -25,38 +25,49 @@
         <!-- Left links -->
         <ul class="navbar-nav mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link {% if 'homePage' in url_name %}active{% endif %}" href="{% url 'homePage' %}">
               Home
             </a>
           </li>
-
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              Post-New
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              My-Bids
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">
+              Message
+            </a>
+          </li>
           <li class="nav-item me-3 me-lg-0  d-sm-inline-block dropdown">
             <a
-              class="nav-link dropdown-toggle"
+              class="nav-link dropdown-toggle {% if 'typeOfSales' in url_name %}active{% endif %}"
               href="#"
               id="navbarDropdown"
               role="button"
               data-mdb-toggle="dropdown"
               aria-expanded="false"
-            >Client</a>
-            <!-- Dropdown menu -->
+            >Configure</a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              {% comment %} <li><h5 class="dropdown-header"></h5></li> {% endcomment %}
-              <li><a class="dropdown-item " href="">Company</a></li>
-              <li><a class="dropdown-item " href="">Customer</a></li>
+              <li><a class="dropdown-item {% if 'condition' in url_name %}active{% endif %}" href="{% url 'conditionPage' %}">Condition</a></li>
+              <li><a class="dropdown-item {% if 'category' in url_name %}active{% endif %}" href="{% url 'categoryPage' %}">Category</a></li>
             </ul>
-          </li>
 
         </ul>
       </div>
       <div class="navbar-nav ms-auto d-sm-none d-flex flex-row position-absolute top-0 end-0 mt-0 justify-content-end">
         <ul class="nav navbar-nav nav-flex-icons ml-auto ms-auto flex-row">
-          <li class="nav-item me-3 me-lg-0">
+          {% comment %} <li class="nav-item me-3 me-lg-0">
             <a gtm-id="Notifications" class="nav-link dropdown-toggle hidden-arrow" role="button" alt="Notifications" id="navbarNotification" data-mdb-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <i class="fas fa-bell" alt="Notifications"></i>
               <span id="navbarNotificationCounter" class="badge rounded-pill badge-notification bg-danger" alt="Notifications" style="color: rgb(255, 255, 255) !important;"></span>
             </a>
-          </li>
+          </li> {% endcomment %}
           <!-- Navbar dropdown -->
           <li class="nav-item me-3 me-lg-0  d-sm-inline-block dropdown">
             <a
@@ -72,22 +83,22 @@
             <!-- Dropdown menu -->
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><h5 class="dropdown-header"></h5></li>
-              <li><a class="dropdown-item" href="#"><i class="fas fa-user-large me-2"></i>Profile</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><a class="dropdown-item" href="#"><i class="fas fa-user-large me-2"></i>Manage Your Account</a></li>
+              <li><a class="dropdown-item" href="{% url "changePasswordPage" %}"><i class="fas fa-lock me-2"></i>Change Your Password</a></li>
               <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item"href="/logout/"><i class="fas fa-right-from-bracket me-2"></i>Sign out</a></li>
+              <li><a class="dropdown-item"href="{% url "logoutPage" %}"><i class="fas fa-right-from-bracket me-2"></i>Sign out</a></li>
             </ul>
           </li>
         </ul>
       </div>
       <div class="navbar-nav ms-auto d-sm-flex d-none flex-row position--absolute justify-content-end">
         <ul class="nav navbar-nav nav-flex-icons ml-auto ms-auto flex-row">
-          <li class="nav-item me-3 me-lg-0">
+          {% comment %} <li class="nav-item me-3 me-lg-0">
             <a gtm-id="Notifications" class="nav-link dropdown-toggle hidden-arrow" role="button" alt="Notifications" id="navbarNotification" data-mdb-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <i class="fas fa-bell" alt="Notifications"></i>
               <span id="navbarNotificationCounter" class="badge rounded-pill badge-notification bg-danger" alt="Notifications" style="color: rgb(255, 255, 255) !important;"></span>
             </a>
-          </li>
+          </li> {% endcomment %}
           <!-- Navbar dropdown -->
           <li class="nav-item me-3 me-lg-0  d-sm-inline-block dropdown">
             <a
@@ -98,17 +109,18 @@
               data-mdb-toggle="dropdown"
               aria-expanded="false"
             >
-            <i class="fas fa-user-large"></i>
+            <i class="fas fa-user-large me-2"></i>Profile
             </a>
             <!-- Dropdown menu -->
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><h5 class="dropdown-header"></h5></li>
-              <li><a class="dropdown-item" href="#"><i class="fas fa-user-large me-2"></i>Profile</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><a class="dropdown-item" href="#"><i class="fas fa-user-large me-2"></i>Manage Your Account</a></li>
+              <li><a class="dropdown-item" href="{% url "changePasswordPage" %}"><i class="fas fa-lock me-2"></i>Change Your Password</a></li>
               <li><hr class="dropdown-divider" /></li>
-              <li><a class="dropdown-item"href="/logout/"><i class="fas fa-right-from-bracket me-2"></i>Sign out</a></li>
+              <li><a class="dropdown-item"href="{% url "logoutPage" %}"><i class="fas fa-right-from-bracket me-2"></i>Sign out</a></li>
             </ul>
           </li>
+
         </ul>
       </div>
     </div>

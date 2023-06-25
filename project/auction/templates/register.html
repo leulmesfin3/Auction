@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Login</title>
+    <title>Sign Up</title>
     <!-- MDB icon -->
     <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon" />
     <!-- Font Awesome -->
@@ -36,41 +36,41 @@
                 <form method="POST">
                   {% csrf_token %}
                   <!-- Email input -->
-                <div class="mb-2 text-start text-danger {% if message_danger == None %}d-none {% endif %}">{{message_danger  |safe }}</div>
-                  <div class="form-outline mb-4">
-                    <input type="text" id="username" name="username" class="form-control" value="{{username}}" required/>
-                    <label class="form-label" for="username">User Name</label>
+                  <div class="mb-2 text-start text-danger {% if message_danger == None %}d-none {% endif %}">{{message_danger  |safe }}</div>
+                  <div class="form-outline my-2">
+                    {{ userForm.username }}
+                    <label class="form-label" for="{{ userForm.username.id_for_label }}">User Name</label>
                   </div>
-                
-                  <!-- Password input -->
-                  <div class="form-outline mb-4 d-flex">
-                    <input type="password" id="password" name="password" class="form-control" required/>
-                    <label class="form-label" for="password">Password</label>
+                  <div class="form-outline my-2">
+                    {{ userForm.first_name }}
+                    <label class="form-label" for="{{ userForm.first_name.id_for_label }}">First Name</label>
+                  </div>
+                  <div class="form-outline my-2">
+                    {{ userForm.last_name }}
+                    <label class="form-label" for="{{ userForm.last_name.id_for_label }}">Last Name</label>
+                  </div>
+                  <div class="form-outline my-2">
+                    {{ userForm.email }}
+                    <label class="form-label" for="{{ userForm.email.id_for_label }}">Email</label>
+                  </div>
+                  <div class="form-outline my-2">
+                    {{ userDetailForm.phone }}
+                    <label class="form-label" for="{{ userDetailForm.phone.id_for_label }}">Phone</label>
+                  </div>
+                  <div class="form-outline my-2 d-flex">
+                    {{ setPasswordForm.new_password1 }}
+                    <label class="form-label" for="{{ setPasswordForm.new_password1.id_for_label }}">Password</label>
                     <i class="far fa-eye fa-eye-slash" id="togglePassword" style="align-self: center;padding: 0 13px; cursor: pointer;"></i>
                   </div>
-                
-                  <!-- 2 column grid layout for inline styling -->
-                  <div class="row mb-4">
-                    <div class="col d-flex justify-content-center">
-                      <!-- Checkbox -->
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="remember_me" id="remember_me" checked />
-                        <label class="form-check-label" for="remember_me"> Remember me </label>
-                      </div>
-                    </div>
-                
-                    <div class="col">
-                      <!-- Simple link -->
-                      <a href="#!">Forgot password?</a>
-                    </div>
+                  <div class="form-outline my-2">
+                    {{ setPasswordForm.new_password2 }}
+                    <label class="form-label" for="{{ setPasswordForm.new_password2.id_for_label }}">Confirm Password</label>
                   </div>
-                
                   <!-- Submit button -->
-                  <button type="submit" class="btn btn-primary btn-block mb-4">Sign in</button>
-                
+                  <button type="submit" class="btn btn-primary btn-block mb-4">Sign Up</button>
                   <!-- Register buttons -->
                   <div class="text-center">
-                    <p>Not a member? <a href="{% url 'registerPage' %}">Register</a></p>
+                    <p>Already have an account? <a href="{% url 'loginPage' %}">Login</a></p>
                   </div>
                 </form>
               </div>
@@ -88,7 +88,7 @@
       const togglePassword = document
           .querySelector('#togglePassword');
 
-      const password = document.querySelector('#password');
+      const password = document.querySelector('#{{ setPasswordForm.new_password1.id_for_label }}');
 
       togglePassword.addEventListener('click', () => {
 

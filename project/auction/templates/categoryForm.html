@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Category</title>
+    <!-- MDB icon -->
+    <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <!-- Google Fonts Roboto -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+    />
+    <!-- MDB -->
+    <link rel="stylesheet" href="{% static 'css/mdb.min.css' %}" />
+  </head>
+  <body style="background-color:#f4f4f4;">
+    <!-- Start your project here-->
+
+    {% include 'sub/header.html' %}
+    <main class="pt-5" style="padding-bottom:57px;" >
+      <div class="container-fluid container-lg  mt-5  px-lg-5 bg-white rounded-5" >
+        <div class="" style="min-height: 75vh">
+          <p>{% if id %} Edit {% else %} New {% endif %} Condition</p>
+          <div class="d-flex justify-content-center" style="min-height: 75vh">
+            <form action = "" method = "post" class="w-100" style="max-width: 564px;">
+              {% csrf_token %}
+              
+              <div class="form-check  my-2">
+                {{ categoryForm.active }}
+                <label class="form-check-label" for="{{ categoryForm.active.id_for_label }}">Active</label>
+              </div>
+              <div class="form-outline my-2">
+                {{ categoryForm.name }}
+                <label class="form-label" for="{{ categoryForm.name.id_for_label }}">Name</label>
+              </div>
+              <div class="form-outline my-2">
+                {{commentForm.text}}
+                <label class="form-label" for="{{commentForm.text.id_for_label}}">Write comment here.</label>
+              </div>
+              <div class="float-end my-2">
+                <input type="submit"  class="btn btn-primary" value="Submit">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    {% include 'sub/generalModal.html' %}
+    <!-- End your project here-->
+
+    <!-- MDB -->
+    <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+    <!-- Custom scripts -->
+    <script type="text/javascript"></script>
+    {% include 'sub/footer.html' %}
+  </body>
+</html>
