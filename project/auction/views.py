@@ -94,6 +94,26 @@ def registerPage(request):
     }
     return render(request, 'register.html', {"userForm":userForm, "userDetailForm":userDetailForm ,"setPasswordForm":setPasswordForm, "message_danger":message_danger})
 
+
+@login_required(login_url="/login/")
+def editProfilePage(request):
+    message_danger = None
+    userObj = get_object_or_404(User, id=request.user.id)
+    userDetailObj = get_object_or_404(UserDetail, user=userObj)
+    if request.method == "POST":
+        userForm = UserForm(request.POST or None, prefix="userForm", instance = userObj)
+        userDetailForm = UserDetailForm(request.POST or None, prefix="userDetailForm", instance = userDetailObj)
+        if userForm.is_valid():
+            user = userForm.save(commit=False)
+            user.save()
+        if userDetailForm.is_valid():
+            userDetail = userDetailForm.save(commit=False)
+            userDetail.save()
+    userForm = UserForm(prefix="userForm", instance = userObj)
+    userDetailForm = UserDetailForm(prefix="userDetailForm", instance = userDetailObj)
+    return render(request, 'editProfile.html', {"userForm":userForm, "userDetailForm":userDetailForm, "message_danger":message_danger })
+
+
 login_required(login_url="/login/")
 @xframe_options_exempt
 def commentPage(request, module, id):
@@ -102,6 +122,8 @@ def commentPage(request, module, id):
         commentList = Comment.objects.filter(condition = id).order_by("-createdOn")
     elif module == "category":
         commentList = Comment.objects.filter(category = id).order_by("-createdOn")
+    elif module == "status":
+        commentList = Comment.objects.filter(status = id).order_by("-createdOn")
     return render(request, 'comment.html', {"commentList": commentList})
 
 
@@ -182,6 +204,56 @@ def conditionEditPage(request, id):
     commentForm = CommentForm(prefix="commentForm")
     conditionForm = ConditionForm(prefix="conditionForm", instance=conditionObj)
     return render(request, 'conditionForm.html', {"commentForm":commentForm, "conditionForm":conditionForm, "id":id})
+
+
+
+@login_required(login_url="/login/")
+def statusPage(request):
+    statusList = Status.objects.filter().order_by("createdOn")
+    paginator = Paginator(statusList, 10)  # Show 25 contacts per page.
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'status.html', { "page_obj":page_obj, "total_page":range(1,paginator.num_pages+1)})
+
+
+@login_required(login_url="/login/")
+def statusAddPage(request):
+    if request.method == "POST":
+        commentForm = CommentForm(request.POST or None, prefix="commentForm")
+        statusForm = StatusForm(request.POST or None, prefix="statusForm")
+        if statusForm.is_valid():
+            status = statusForm.save(commit=False)
+            status.save()
+            if commentForm.is_valid():
+                comment = commentForm.save(commit=False)
+                comment.user = request.user
+                comment.text = "Add:_" + comment.text
+                comment.save()
+                status.comment.add(comment)
+            return redirect("statusPage")
+    commentForm = CommentForm(prefix="commentForm")
+    statusForm = StatusForm(prefix="statusForm")
+    return render(request, 'statusForm.html', {"commentForm":commentForm, "statusForm":statusForm})
+
+@login_required(login_url="/login/")
+def statusEditPage(request, id):
+    statusObj = get_object_or_404(Status, id=id)
+    if request.method == "POST":
+        commentForm = CommentForm(request.POST or None, prefix="commentForm")
+        statusForm = StatusForm(request.POST or None, prefix="statusForm", instance=statusObj)
+        if statusForm.is_valid():
+            status = statusForm.save(commit=False)
+            status.save()
+            if commentForm.is_valid():
+                comment = commentForm.save(commit=False)
+                comment.user = request.user
+                comment.text = "Edit:_" + comment.text
+                comment.save()
+                status.comment.add(comment)
+            return redirect("statusPage")
+    commentForm = CommentForm(prefix="commentForm")
+    statusForm = StatusForm(prefix="statusForm", instance=statusObj)
+    return render(request, 'statusForm.html', {"commentForm":commentForm, "statusForm":statusForm, "id":id})
 
 @login_required(login_url="/login/")
 def categoryPage(request):

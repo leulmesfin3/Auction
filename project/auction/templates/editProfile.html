@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Sign Up</title>
+    <title>Edit Profile</title>
     <!-- MDB icon -->
     <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon" />
     <!-- Font Awesome -->
@@ -23,6 +23,8 @@
   </head>
   <body>
     <!-- Start your project here-->
+
+    {% include 'sub/header.html' %}
     <main>
       <div class="container">
         <div class="d-flex justify-content-center align-items-center" style="min-height: 91vh">
@@ -31,7 +33,7 @@
             <div class="card bg-white border rounded-5">
               <div class="card-body">
                 <div class="mb-4 mt-3">
-                  <img src="{% static 'img/o2.png' %}" alt="logo" style="width: 52px; height: 46px;">
+                  {% comment %} <img src="{% static 'img/o2.png' %}" alt="logo" style="width: 52px; height: 46px;"> {% endcomment %}
                 </div>
                 <form method="POST">
                   {% csrf_token %}
@@ -57,29 +59,8 @@
                     {{ userDetailForm.phone }}
                     <label class="form-label" for="{{ userDetailForm.phone.id_for_label }}">Phone</label>
                   </div>
-                  <div class="form-outline my-2 d-flex">
-                    {{ setPasswordForm.new_password1 }}
-                    <label class="form-label" for="{{ setPasswordForm.new_password1.id_for_label }}">Password</label>
-                    <i class="far fa-eye fa-eye-slash" id="togglePassword" style="align-self: center;padding: 0 13px; cursor: pointer;"></i>
-                  </div>
-                  <div>
-                    <ul style="font-size: 12px;text-align: initial;">
-                      <li>Your password can’t be too similar to your other personal information.</li>
-                      <li>Your password must contain at least 8 characters.</li>
-                      <li>Your password can’t be a commonly used password.</li>
-                      <li>Your password can’t be entirely numeric.</li>
-                    </ul>
-                  </div>
-                  <div class="form-outline my-2">
-                    {{ setPasswordForm.new_password2 }}
-                    <label class="form-label" for="{{ setPasswordForm.new_password2.id_for_label }}">Confirm Password</label>
-                  </div>
                   <!-- Submit button -->
-                  <button type="submit" class="btn btn-primary btn-block mb-4">Sign Up</button>
-                  <!-- Register buttons -->
-                  <div class="text-center">
-                    <p>Already have an account? <a href="{% url 'loginPage' %}">Login</a></p>
-                  </div>
+                  <button type="submit" class="btn btn-primary btn-block mb-4">Update</button>
                 </form>
               </div>
             </div>

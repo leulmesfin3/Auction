@@ -10,12 +10,17 @@ urlpatterns = [
     path('viewLot/', viewLotPage, name ="viewLotPage"),
     path('logout/', logoutPage, name ="logoutPage"),
     path('changePassword/', changePasswordPage, name ="changePasswordPage"),
+    path('editProfile/', editProfilePage, name ="editProfilePage"),
     
     path('comment/<str:module>/<int:id>/', commentPage, name ="commentPage"),
     
     path('condition/', conditionPage, name ="conditionPage"),
     path('condition/add/', conditionAddPage, name ="conditionAddPage"),
     path('condition/edit/<int:id>/', conditionEditPage, name ="conditionEditPage"),
+    
+    path('status/', statusPage, name ="statusPage"),
+    path('status/add/', statusAddPage, name ="statusAddPage"),
+    path('status/edit/<int:id>/', statusEditPage, name ="statusEditPage"),
     
     path('category/', categoryPage, name ="categoryPage"),
     path('category/add/', categoryAddPage, name ="categoryAddPage"),

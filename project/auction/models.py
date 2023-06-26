@@ -63,7 +63,7 @@ class Condition(models.Model):
     updatedOn = models.DateTimeField(auto_now=True, null=True, blank=True)
     comment =  models.ManyToManyField(Comment, blank=True)
     def __str__(self):
-        return str(self.text)
+        return str(self.name)
     
 class Category(models.Model):
     name = models.CharField(max_length=60, null=False, blank=False)
@@ -72,4 +72,60 @@ class Category(models.Model):
     updatedOn = models.DateTimeField(auto_now=True, null=True, blank=True)
     comment =  models.ManyToManyField(Comment, blank=True)
     def __str__(self):
-        return str(self.text)
+        return str(self.name)
+    
+
+class Status(models.Model):
+    name = models.CharField(max_length=60, null=False, blank=False)
+    active = models.BooleanField(default=True, null=False, blank=False) 
+    createdOn = models.DateTimeField( auto_now_add=True, blank=True, null=True, editable=True)
+    updatedOn = models.DateTimeField(auto_now=True, null=True, blank=True)
+    comment =  models.ManyToManyField(Comment, blank=True)
+    def __str__(self):
+        return str(self.name)
+    
+    
+class Item(models.Model):
+    name = models.CharField(max_length=60, null=False, blank=False)
+    starting_price = models.DecimalField(null=False, blank=False, max_digits=8, decimal_places=2, default=0.0)
+    min_increase_price = models.DecimalField(null=False, blank=False, max_digits=8, decimal_places=2, default=0.0)
+    max_increase_price = models.DecimalField(null=False, blank=False, max_digits=8, decimal_places=2, default=0.0)
+    condition = models.ForeignKey(Condition, blank=False, null=False, on_delete=models.RESTRICT)
+    status = models.ForeignKey(Status, blank=False, null=False, on_delete=models.RESTRICT)
+    category = models.ManyToManyField(Category, blank=True)
+    description = models.TextField(null=True, blank=True)
+    active = models.BooleanField(default=True, null=False, blank=False) 
+    createdOn = models.DateTimeField( auto_now_add=True, blank=True, null=True, editable=True)
+    updatedOn = models.DateTimeField(auto_now=True, null=True, blank=True)
+    comment =  models.ManyToManyField(Comment, blank=True)
+    
+    def __str__(self):
+        return str(self.name)
+    
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     lastPrice = ItemPriceHistory.objects.filter().order_by("-createdOn")
+    #     if not lastPrice or lastPrice.last().price != self.price: 
+    #         itemPriceHistory = ItemPriceHistory()
+    #         itemPriceHistory.item = self
+    #         itemPriceHistory.price = self.price
+    #         itemPriceHistory.save()
+            
+            
+class ItemPriceHistory(models.Model):
+    user = models.ForeignKey(User, blank=False, null=False, on_delete=models.RESTRICT)
+    item = models.ForeignKey(Item, blank=False, null=False, on_delete=models.RESTRICT)
+    price = models.DecimalField(max_digits=8, decimal_places=2, blank=False, null=False, default=0.0)
+    createdOn = models.DateTimeField( auto_now_add=True, blank=True, null=True, editable=True)
+    updatedOn = models.DateTimeField(auto_now=True, null=True, blank=True)
+    def __str__(self):
+        return str(self.item.name)
+            
+class ItemStatusHistory(models.Model):
+    user = models.ForeignKey(User, blank=False, null=False, on_delete=models.RESTRICT)
+    item = models.ForeignKey(Item, blank=False, null=False, on_delete=models.RESTRICT)
+    status = models.ForeignKey(Status, blank=False, null=False, on_delete=models.RESTRICT)
+    createdOn = models.DateTimeField( auto_now_add=True, blank=True, null=True, editable=True)
+    updatedOn = models.DateTimeField(auto_now=True, null=True, blank=True)
+    def __str__(self):
+        return str(self.item.name)
