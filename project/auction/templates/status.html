@@ -44,7 +44,7 @@
                 </tr>
               </thead>
               <tbody>
-                {% for status in page_obj%}
+                {% for status in page_obj %}
                 <tr>
                   <td>{{status.id|default_if_none:""}}</th>
                   <td>{{status.name|default_if_none:""}}</td>

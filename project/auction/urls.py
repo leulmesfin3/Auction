@@ -7,7 +7,7 @@ urlpatterns = [
     path('login/', loginPage, name ="loginPage"),
     path('register/', registerPage, name ="registerPage"),
     path('home/', homePage, name ="homePage"),
-    path('viewLot/', viewLotPage, name ="viewLotPage"),
+    path('viewLot/<int:id>/', viewLotPage, name ="viewLotPage"),
     path('logout/', logoutPage, name ="logoutPage"),
     path('changePassword/', changePasswordPage, name ="changePasswordPage"),
     path('editProfile/', editProfilePage, name ="editProfilePage"),
@@ -25,5 +25,9 @@ urlpatterns = [
     path('category/', categoryPage, name ="categoryPage"),
     path('category/add/', categoryAddPage, name ="categoryAddPage"),
     path('category/edit/<int:id>/', categoryEditPage, name ="categoryEditPage"),
+    
+    path('item/', itemPage, name ="itemPage"),
+    path('item/add/', itemAddPage, name ="itemAddPage"),
+    path('item/edit/<int:id>/', itemEditPage, name ="itemEditPage"),
 ]
                

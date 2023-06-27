@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Item</title>
+    <!-- MDB icon -->
+    <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <!-- Google Fonts Roboto -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+    />
+    <!-- MDB -->
+    <link rel="stylesheet" href="{% static 'css/mdb.min.css' %}" />
+  </head>
+  <body style="background-color:#f4f4f4;">
+    <!-- Start your project here-->
+
+    {% include 'sub/header.html' %}
+    <main class="pt-5" style="padding-bottom:57px;" >
+      <div class="container-fluid container-lg  mt-5  px-lg-5 bg-white rounded-5 py-1" >
+        <div class="" style="min-height: 75vh">
+          <p>{% if id %} Edit {% else %} New {% endif %} Item</p>
+          <div class="d-flex justify-content-center" style="min-height: 75vh">
+            <form action = "" method = "post" class="w-100" style="max-width: 564px;">
+              {% csrf_token %}
+              
+              <div class="form-outline my-2">
+                {{ itemForm.name }}
+                <label class="form-label" for="{{ itemForm.name.id_for_label }}">Item Name</label>
+              </div>
+              <div class="form-outline my-2">
+                {{ itemForm.starting_price }}
+                <label class="form-label" for="{{ itemForm.starting_price.id_for_label }}">Starting Price</label>
+              </div>
+              <div class="form-outline my-2">
+                {{ itemForm.min_increase_price }}
+                <label class="form-label" for="{{ itemForm.min_increase_price.id_for_label }}">Price Minimum Increase</label>
+              </div>
+              <div class="form-outline my-2">
+                {{ itemForm.max_increase_price }}
+                <label class="form-label" for="{{ itemForm.max_increase_price.id_for_label }}">Price Maximum Increase</label>
+              </div>
+              <div class="my-2">
+                <label class="form-label m-0" for="{{ itemForm.condition.id_for_label }}">Condition</label>
+                {{ itemForm.condition }}
+              </div>
+              <div class="my-2">
+                <label class="form-label m-0" for="{{ itemForm.status.id_for_label }}">Status</label>
+                {{ itemForm.status }}
+              </div>
+              <div class="form-outline my-2">
+                {{ itemForm.tag }}
+                <label class="form-label" for="{{ itemForm.tag.id_for_label }}">Item Tag</label>
+              </div>
+              <div class="my-2">
+                <label class="form-label m-0" for="{{ itemForm.category.id_for_label }}">Category</label>
+                {{ itemForm.category }}
+              </div>
+              <div class="form-outline my-2">
+                {{itemForm.description}}
+                <label class="form-label" for="{{commentForm.description.id_for_label}}">Write description here.</label>
+              </div>
+              {% if id %}
+              <div class="form-outline my-2">
+                {{commentForm.text}}
+                <label class="form-label" for="{{commentForm.text.id_for_label}}">Write comment here.</label>
+              </div>
+              {% endif %}
+              <div class="float-end my-2">
+                <input type="submit"  class="btn btn-primary" value="Submit">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    {% include 'sub/generalModal.html' %}
+    <!-- End your project here-->
+
+    <!-- MDB -->
+    <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+    <!-- Custom scripts -->
+    <script type="text/javascript"></script>
+    {% include 'sub/footer.html' %}
+  </body>
+</html>

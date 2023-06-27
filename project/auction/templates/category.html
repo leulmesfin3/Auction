@@ -44,7 +44,7 @@
                 </tr>
               </thead>
               <tbody>
-                {% for category in page_obj%}
+                {% for category in page_obj %}
                 <tr>
                   <td>{{category.id|default_if_none:""}}</th>
                   <td>{{category.name|default_if_none:""}}</td>

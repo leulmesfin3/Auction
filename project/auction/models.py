@@ -83,8 +83,8 @@ class Status(models.Model):
     comment =  models.ManyToManyField(Comment, blank=True)
     def __str__(self):
         return str(self.name)
-    
-    
+
+
 class Item(models.Model):
     name = models.CharField(max_length=60, null=False, blank=False)
     starting_price = models.DecimalField(null=False, blank=False, max_digits=8, decimal_places=2, default=0.0)
@@ -93,11 +93,36 @@ class Item(models.Model):
     condition = models.ForeignKey(Condition, blank=False, null=False, on_delete=models.RESTRICT)
     status = models.ForeignKey(Status, blank=False, null=False, on_delete=models.RESTRICT)
     category = models.ManyToManyField(Category, blank=True)
+    tag = models.CharField(max_length=60, null=False, blank=False)
+    user = models.ForeignKey(User, blank=False, null=False, on_delete=models.RESTRICT)
     description = models.TextField(null=True, blank=True)
     active = models.BooleanField(default=True, null=False, blank=False) 
     createdOn = models.DateTimeField( auto_now_add=True, blank=True, null=True, editable=True)
     updatedOn = models.DateTimeField(auto_now=True, null=True, blank=True)
     comment =  models.ManyToManyField(Comment, blank=True)
+    
+    def current_price(self):
+        price_history = self.itempricehistory_set.all()
+        # print(price_history)
+        if not price_history:
+            return self.starting_price
+        return price_history.order_by("createdOn").last().price
+    
+    def bids(self):
+        price_history = self.itempricehistory_set.all()
+        return price_history.count()
+    
+    def last_price(self, user):
+        price_history = self.itempricehistory_set.filter(user = user)
+        if price_history:
+            return price_history.order_by("createdOn").last().price
+        return "-"
+    
+    def rank(self, user):
+        price_history = self.itempricehistory_set.all()
+        if price_history.filter(user = user):
+            return price_history.filter(price__gt = self.last_price(user)).count() + 1
+        return "-"
     
     def __str__(self):
         return str(self.name)
@@ -115,6 +140,7 @@ class Item(models.Model):
 class ItemPriceHistory(models.Model):
     user = models.ForeignKey(User, blank=False, null=False, on_delete=models.RESTRICT)
     item = models.ForeignKey(Item, blank=False, null=False, on_delete=models.RESTRICT)
+    active = models.BooleanField(default=True, null=False, blank=False) 
     price = models.DecimalField(max_digits=8, decimal_places=2, blank=False, null=False, default=0.0)
     createdOn = models.DateTimeField( auto_now_add=True, blank=True, null=True, editable=True)
     updatedOn = models.DateTimeField(auto_now=True, null=True, blank=True)
