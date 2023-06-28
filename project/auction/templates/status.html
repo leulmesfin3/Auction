@@ -38,6 +38,7 @@
                 <tr>
                   <th scope="col">ID</th>
                   <th scope="col">Name</th>
+                  <th scope="col">Color</th>
                   <th scope="col">Status</th>
                   <th scope="col">Remark</th>
                   <th scope="col">Actions</th>
@@ -48,6 +49,7 @@
                 <tr>
                   <td>{{status.id|default_if_none:""}}</th>
                   <td>{{status.name|default_if_none:""}}</td>
+                  <td><div style="height:25px;background-color:{{status.backgroundColor|default_if_none:""}};"></div></td>
                   <td>{% if status.active == True %}<i class="fas fa-check text-success me-2"></i>Yes{% else %}<i class="fas fa-xmark text-danger me-2"></i>No{% endif%}</td>
                   <td>
                     <a class="btn btn-link btn-rounded btn-sm fw-bold" onclick="showGeneralModal('/comment/status/{{status.id|default_if_none:""}}/', 'Comment')" data-mdb-ripple-color="dark">{{status.comment.count}}</a>

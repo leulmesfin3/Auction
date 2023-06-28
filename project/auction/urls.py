@@ -29,5 +29,7 @@ urlpatterns = [
     path('item/', itemPage, name ="itemPage"),
     path('item/add/', itemAddPage, name ="itemAddPage"),
     path('item/edit/<int:id>/', itemEditPage, name ="itemEditPage"),
+    
+    path('itemMyBid/', itemMyBidPage, name ="itemMyBidPage"),
 ]
                

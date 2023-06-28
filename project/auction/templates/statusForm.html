@@ -20,6 +20,8 @@
     />
     <!-- MDB -->
     <link rel="stylesheet" href="{% static 'css/mdb.min.css' %}" />
+    <script src="{% static 'colorfield/jscolor/jscolor.js' %}"></script>
+    <script src="{% static 'colorfield/colorfield.js' %}"></script>
   </head>
   <body style="background-color:#f4f4f4;">
     <!-- Start your project here-->
@@ -40,6 +42,10 @@
               <div class="form-outline my-2">
                 {{ statusForm.name }}
                 <label class="form-label" for="{{ statusForm.name.id_for_label }}">Name</label>
+              </div>
+              <div class="my-2">
+                <label class="form-label m-0" for="{{ statusForm.backgroundColor.id_for_label }}">Background Color</label>
+                {{ statusForm.backgroundColor }}
               </div>
               <div class="form-outline my-2">
                 {{commentForm.text}}

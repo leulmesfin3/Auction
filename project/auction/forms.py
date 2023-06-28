@@ -50,13 +50,15 @@ class ConditionForm(forms.ModelForm):
         self.fields['active'].widget.attrs = {'class':'form-check-input'}
         
 class StatusForm(forms.ModelForm):
+    # backgroundColor = ColorField(widget=ColorWidget(attrs={'palette': COLOR_CHOICES}))
     class Meta:
         model = Status
-        fields = ("name", "active")
+        fields = ("name", "backgroundColor", "active")
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['name'].widget.attrs = {'class':'form-control'}
+        self.fields['backgroundColor'].widget.attrs = {'class':'form-control'}
         self.fields['active'].widget.attrs = {'class':'form-check-input'}
         
 class CategoryForm(forms.ModelForm):

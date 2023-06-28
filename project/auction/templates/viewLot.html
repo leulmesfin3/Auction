@@ -30,7 +30,7 @@
       <div class="container-fluid container-lg  mt-5  px-lg-5 bg-white rounded-5 py-1" >
         
         
-        <div class="row bg-white border rounded-5 py-3 my-3">
+        <div class="row border rounded-5 py-3 my-3" style="background-color: #faf6f6 !important">
           <div class="row">
             <div class="col-4"></div>
             <div class="col-4 justify-content-center d-flex"><b>00:00:00</b></div>
@@ -52,7 +52,7 @@
                   <h3>{{item.name}}</h3>
                 </div>
                 <div class="col-4 d-flex align-items-center justify-content-end">
-                  <div class="bg-success text-center p-0" style="border-radius: 0.5rem;color: #fff; font-size: small; width: 130px;">ACTIVE</div>
+                  <div class="bg-success text-center p-0" style="border-radius: 0.5rem;color: #fff; font-size: small; width: 130px; background-color:{{item.status.backgroundColor}} !important">{{item.status.name}}</div>
                 </div>
               </div>
             </div> 
@@ -147,7 +147,12 @@
                             <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
                           </div>
                           <div class="form-control input text-right">
-                            {{ item|my_rank:request.user }} {% if item|my_rank:request.user == 1 %} - Winning{% endif %}
+                            {{ item|my_rank:request.user }} 
+                            {% if item|my_rank:request.user == 1 %}
+                             - Winning
+                             {% elif item|my_rank:request.user > 1 %}
+                             - Loosing
+                             {% endif %}
                           </div>
                         </div>
                       </div>
@@ -166,6 +171,7 @@
                     <div class="col-12">
                       <hr>
                     </div>
+                    {% if item.user != request.user %}
                     <div class="col-12">
                       <label class="control-label" style="font-weight:500;">Your New Price</label>
                       <div class="form-group" style="">
@@ -181,10 +187,11 @@
                       </div>
                       <div class="mb-2 text-start text-danger" id="price_input_error"></div>
                       <hr>
-                      <div class="d-grid gap-2">
+                      <div class="d-grid gap-2" style="margin-bottom: 11px;">
                         <input type="submit" onclick="price_input_error_fun()" class="btn btn-primary w-100" value="Process Bid">
                       </div>
                     </div>
+                    {% endif %}
                   </div>
                 </form>
               </div>

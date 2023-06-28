@@ -1,4 +1,5 @@
 from django.db import models
+from colorfield.fields import ColorField
 from django.contrib.auth.models import User
 
 # Create your models here.
@@ -77,6 +78,7 @@ class Category(models.Model):
 
 class Status(models.Model):
     name = models.CharField(max_length=60, null=False, blank=False)
+    backgroundColor = ColorField(default='#14a44d', null=False, blank=False) 
     active = models.BooleanField(default=True, null=False, blank=False) 
     createdOn = models.DateTimeField( auto_now_add=True, blank=True, null=True, editable=True)
     updatedOn = models.DateTimeField(auto_now=True, null=True, blank=True)

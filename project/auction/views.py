@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from .forms import *
@@ -65,13 +65,12 @@ def viewLotPage(request, id):
     if request.method == "POST":
         itemBidForm = ItemBidForm(request.POST or None, prefix="itemBidForm", instance=itemObj)
         if itemBidForm.is_valid():
-            # itemBid = itemBidForm.save(commit=False)
-            # itemBid.save()
-            itemPriceHistory = ItemPriceHistory()
-            itemPriceHistory.user = request.user
-            itemPriceHistory.item = itemObj
-            itemPriceHistory.price = itemBidForm['price_input'].value()
-            itemPriceHistory.save()
+            if not itemObj.user == request.user:
+                itemPriceHistory = ItemPriceHistory()
+                itemPriceHistory.user = request.user
+                itemPriceHistory.item = itemObj
+                itemPriceHistory.price = itemBidForm['price_input'].value()
+                itemPriceHistory.save()
     itemBidForm = ItemBidForm(prefix="itemBidForm")
     itemBidForm.fields['price_input'].widget.attrs = {
         **itemBidForm.fields['price_input'].widget.attrs,
@@ -174,6 +173,8 @@ def changePasswordPage(request):
 
 @login_required(login_url="/login/")
 def conditionPage(request):
+    if not request.user.is_superuser: 
+        raise Http404
     conditionList = Condition.objects.filter().order_by("createdOn")
     paginator = Paginator(conditionList, 10)  # Show 25 contacts per page.
     page_number = request.GET.get("page")
@@ -182,6 +183,8 @@ def conditionPage(request):
 
 @login_required(login_url="/login/")
 def conditionAddPage(request):
+    if not request.user.is_superuser: 
+        raise Http404
     if request.method == "POST":
         commentForm = CommentForm(request.POST or None, prefix="commentForm")
         conditionForm = ConditionForm(request.POST or None, prefix="conditionForm")
@@ -201,6 +204,8 @@ def conditionAddPage(request):
 
 @login_required(login_url="/login/")
 def conditionEditPage(request, id):
+    if not request.user.is_superuser: 
+        raise Http404
     conditionObj = get_object_or_404(Condition, id=id)
     if request.method == "POST":
         commentForm = CommentForm(request.POST or None, prefix="commentForm")
@@ -221,6 +226,8 @@ def conditionEditPage(request, id):
 
 @login_required(login_url="/login/")
 def statusPage(request):
+    if not request.user.is_superuser: 
+        raise Http404
     statusList = Status.objects.filter().order_by("createdOn")
     paginator = Paginator(statusList, 10)  # Show 25 contacts per page.
     page_number = request.GET.get("page")
@@ -229,6 +236,8 @@ def statusPage(request):
 
 @login_required(login_url="/login/")
 def statusAddPage(request):
+    if not request.user.is_superuser: 
+        raise Http404
     if request.method == "POST":
         commentForm = CommentForm(request.POST or None, prefix="commentForm")
         statusForm = StatusForm(request.POST or None, prefix="statusForm")
@@ -248,6 +257,8 @@ def statusAddPage(request):
 
 @login_required(login_url="/login/")
 def statusEditPage(request, id):
+    if not request.user.is_superuser: 
+        raise Http404
     statusObj = get_object_or_404(Status, id=id)
     if request.method == "POST":
         commentForm = CommentForm(request.POST or None, prefix="commentForm")
@@ -268,6 +279,8 @@ def statusEditPage(request, id):
 
 @login_required(login_url="/login/")
 def categoryPage(request):
+    if not request.user.is_superuser: 
+        raise Http404
     categoryList = Category.objects.filter().order_by("createdOn")
     paginator = Paginator(categoryList, 10)  # Show 25 contacts per page.
     page_number = request.GET.get("page")
@@ -276,6 +289,8 @@ def categoryPage(request):
 
 @login_required(login_url="/login/")
 def categoryAddPage(request):
+    if not request.user.is_superuser: 
+        raise Http404
     if request.method == "POST":
         commentForm = CommentForm(request.POST or None, prefix="commentForm")
         categoryForm = CategoryForm(request.POST or None, prefix="categoryForm")
@@ -295,6 +310,8 @@ def categoryAddPage(request):
 
 @login_required(login_url="/login/")
 def categoryEditPage(request, id):
+    if not request.user.is_superuser: 
+        raise Http404
     categoryObj = get_object_or_404(Category, id=id)
     if request.method == "POST":
         commentForm = CommentForm(request.POST or None, prefix="commentForm")
@@ -315,7 +332,7 @@ def categoryEditPage(request, id):
 
 @login_required(login_url="/login/")
 def itemPage(request):
-    itemList = Item.objects.filter().order_by("createdOn")
+    itemList = Item.objects.filter(user = request.user).order_by("createdOn")
     paginator = Paginator(itemList, 10)  # Show 25 contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -359,3 +376,10 @@ def itemEditPage(request, id):
     itemForm = ItemForm(prefix="itemForm", instance=itemObj)
     return render(request, 'itemForm.html', {"commentForm":commentForm, "itemForm":itemForm, "id":id})
 
+@login_required(login_url="/login/")
+def itemMyBidPage(request):
+    itemList = Item.objects.filter(itempricehistory__user = request.user).distinct().order_by("createdOn")
+    paginator = Paginator(itemList, 10)  # Show 25 contacts per page.
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'item.html', { "page_obj":page_obj, "total_page":range(1,paginator.num_pages+1), "showAdd":True})
