@@ -166,3 +166,24 @@ class ItemStatusHistory(models.Model):
     updatedOn = models.DateTimeField(auto_now=True, null=True, blank=True)
     def __str__(self):
         return str(self.item.name)
+    
+class Message(models.Model):
+    item = models.ForeignKey(Item, blank=False, null=False, on_delete=models.RESTRICT)
+    message_from = models.ForeignKey(User, blank=False, null=False, on_delete=models.RESTRICT, related_name = "messageFrom")
+    message_to = models.ForeignKey(User, blank=False, null=False, on_delete=models.RESTRICT, related_name = "messageTo")
+    text = models.TextField(null=False, blank=False)
+    createdOn = models.DateTimeField( auto_now_add=True, blank=True, null=True, editable=True)
+    updatedOn = models.DateTimeField(auto_now=True, null=True, blank=True)
+    def chattingWith(self):
+        if self.message_from == self.item.user:
+            return self.message_to.id
+        else:
+            return self.message_from.id
+        
+    def chattingWithName(self):
+        if self.message_from == self.item.user:
+            return self.message_to.username
+        else:
+            return self.message_from.username
+    def __str__(self):
+        return str(self.item)

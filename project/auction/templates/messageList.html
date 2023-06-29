@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Message</title>
+    <!-- MDB icon -->
+    <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <!-- Google Fonts Roboto -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+    />
+    <!-- MDB -->
+    <link rel="stylesheet" href="{% static 'css/mdb.min.css' %}" />
+  </head>
+  <body style="background-color:#f4f4f4;">
+    <!-- Start your project here-->
+
+    {% include 'sub/header.html' %}
+    <main class="pt-5" style="padding-bottom:57px;" >
+      <div class="container-fluid container-lg  mt-5  px-lg-5 bg-white rounded-5 py-1" >
+        <div class="" style="min-height: 75vh">
+          <div class="table-responsive">
+            <table class="table table-responsive d-md-table d-block table-sm table-bordered  table-striped caption-top text-nowrap ">
+              <caption>
+                List of Message
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Item Name</th>
+                  <th scope="col">Message With</th>
+                  <th scope="col">Time</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for message in page_obj %}
+                <tr>
+                  <td>{{message.item.name|default_if_none:""}}</th>
+                  <td>{{message.chattingWithName|default_if_none:""}}</td>
+                  <td>{{message.createdOn|default_if_none:""}}</td>
+                  <td>
+                    <a class="btn btn-link btn-rounded btn-sm fw-bold" href="
+                    {% if message.item.user != request.user %}
+                      {% url 'messageChatPage' message.item.id %}
+                    {% else %}
+                      {% url 'messageChatAdminPage' message.item.id message.chattingWith %}
+                    {% endif %}
+                    " data-mdb-ripple-color="dark">Open</a>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="">
+        <nav aria-label="Page navigation">
+          <ul class="pagination justify-content-center">
+              
+            <li class="page-item d-sm-block d-none {% if not page_obj.has_previous %} disabled {% endif %}">
+                <a class="page-link" href="?page=1">&laquo; First</a>
+            </li>
+            <li class="page-item {% if not page_obj.has_previous %} disabled {% endif %}">
+                <a class="page-link" href="{% if page_obj.has_previous %} ?page={{ page_obj.previous_page_number }} {% endif %}">Previous</a>
+            </li>
+            
+            <select class="form-control form-select" style="width: 73px;" onchange="location = '?page=' + this.value;">
+              {% for page_no in total_page %}
+              <option value="{{page_no}}" {% if page_no == page_obj.number %}selected{% endif %}>{{page_no}}</option>
+              {% endfor %}
+             </select>
+            
+            <li class="page-item {% if not page_obj.has_next %} disabled {% endif %}">
+                <a class="page-link" href="{% if page_obj.has_next %} ?page={{ page_obj.next_page_number }} {% endif %}">Next</a>
+            </li>
+            <li class="page-item d-sm-block d-none {% if not page_obj.has_next %} disabled {% endif %}">
+                <a class="page-link" href="{% if page_obj.has_next %} ?page={{ page_obj.paginator.num_pages }} {% endif %}">Last &raquo;</a>
+            </li>
+            
+          </ul>
+        </nav>
+      </div>
+    </main>
+
+    {% include 'sub/generalModal.html' %}
+    <!-- End your project here-->
+
+    <!-- MDB -->
+    <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+    <!-- Custom scripts -->
+    <script type="text/javascript"></script>
+    {% include 'sub/footer.html' %}
+  </body>
+</html>

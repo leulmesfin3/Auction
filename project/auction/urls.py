@@ -35,5 +35,10 @@ urlpatterns = [
     path('users/', usersPage, name ="usersPage"),
     path('users/edit/<int:id>/', usersEditPage, name ="usersEditPage"),
     path('users/edit/<int:id>/password', usersPasswordPage, name ="usersPasswordPage"),
+    
+    
+    path('message/chat/<int:id>/', messageChatPage, name ="messageChatPage"),
+    path('message/chat/<int:id>/<int:user>/', messageChatAdminPage, name ="messageChatAdminPage"),
+    path('message/', messageListPage, name ="messageListPage"),
 ]
-               
+            

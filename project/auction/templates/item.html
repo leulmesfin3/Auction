@@ -122,11 +122,13 @@
                     style="min-height: 157px;"
                   />
                 </div>
+                {% if not request.user.is_authenticated %}
                 <div class="col-12">
                   <div class="alert alert-info" style="padding: 8px 12px">
-                    Login to see Bid Status
+                    Login to do more
                   </div>
                 </div>
+                {% endif %}
                 <div class="col-12">
                   <div class="d-grid gap-2">
                     <a type="button" class="btn btn-primary mb-3" data-mdb-ripple-color="dark" href= '{% url "viewLotPage" item.id %}'>{% if item.user == request.user %}Manage{% else %}View{% endif %} This Lot</a>
@@ -137,7 +139,7 @@
             <div class="col-md-9  col-sm-12" style="min-height:258px">
               <div class="row h-100">
                 <div class="col-3 justify-content-center d-flex"><b></b></div>
-                <div class="col-6 justify-content-center d-flex"><b>00:00:00</b></div>
+                <div class="col-md-6 justify-content-center d-flex"><b>Posted On: {{item.createdOn}}</b></div>
                 <div class="col-3 justify-content-center d-flex">
                   {% if showAdd %}
                   <p class=" d-flex"> 

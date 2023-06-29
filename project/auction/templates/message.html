@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>Message</title>
+    <!-- MDB icon -->
+    <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon" />
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <!-- Google Fonts Roboto -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+    />
+    <!-- MDB -->
+    <link rel="stylesheet" href="{% static 'css/mdb.min.css' %}" />
+    <style>
+      body {
+        font-family: 'Roboto', sans-serif;
+      }
+      .mdl-layout {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      .mdl-card {
+        margin: 10px;
+      }
+      .mdl-card__title {
+        color: #fff;
+        background-color: #007bff;
+        padding: 16px;
+      }
+      .mdl-card__supporting-text {
+        padding: 16px;
+      }
+      .mdl-textfield {
+        width: 100%;
+      }
+      .mdl-textfield__label {
+        color: rgba(0, 0, 0, 0.3);
+      }
+      .mdl-button--accent {
+        background-color: #007bff;
+        color: #fff;
+      }
+      .message {
+        display: flex;
+        margin-bottom: 10px;
+        align-items: flex-end;
+      }
+      .message-sent {
+        justify-content: flex-end;
+      }
+      .message-received {
+        justify-content: flex-start;
+      }
+      .message-bubble {
+        max-width: 60%;
+        padding: 10px;
+        border-radius: 10px;
+        background-color: #f1f1f1;
+        color: #000;
+        word-wrap: break-word;
+      }
+      .message-sent .message-bubble {
+        background-color: #007bff;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body style="background-color:#f4f4f4;">
+    <!-- Start your project here-->
+
+    {% include 'sub/header.html' %}
+    <main class="pt-5" style="padding-bottom:57px;" >
+      <div class="container-fluid container-lg  mt-5  px-lg-5 rounded-5 py-1" style="background-color: #f4f4f4 !important;">
+        <div class="" style="min-height: 75vh">
+
+          <div class="card" style="max-width: 564px; margin:auto;">
+            <div class="card-body">
+              
+              <div class="mdl-card__supporting-text">
+                <div id="message-list">
+                  {% for message in messageList%}
+                  <div class="message message-{% if message.message_from != request.user %}received{% else %}sent{% endif %}">
+                    <div class="message-bubble">
+                      {{message.text}} 
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+              <form action = "" method = "post" class="w-100" style="max-width: 564px;" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-outline my-2">
+                  {{messageForm.text}}
+                  <label class="form-label" for="{{messageForm.text.id_for_label}}">Start typing here</label>
+                </div>
+
+                <div class="float-end my-2">
+                  <input type="submit"  class="btn btn-primary" value="Submit">
+                </div>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </main>
+
+    {% include 'sub/generalModal.html' %}
+    <!-- End your project here-->
+
+    <!-- MDB -->
+    <script type="text/javascript" src="{% static 'js/mdb.min.js' %}"></script>
+    <!-- Custom scripts -->
+    <script type="text/javascript"></script>
+    {% include 'sub/footer.html' %}
+  </body>
+</html>

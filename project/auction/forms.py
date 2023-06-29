@@ -109,3 +109,15 @@ class ItemBidForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['price_input'].widget.attrs = {'class':'form-control'}
+        
+class MessageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ("text", )
+        # exclude = ("user", )
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['text'].widget.attrs={  "placeholder": "Start typing here",
+                                            "class": "form-control",
+                                            "style": "height:100px; width:100%"}    

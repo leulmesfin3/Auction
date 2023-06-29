@@ -33,7 +33,7 @@
         <div class="row border rounded-5 py-3 my-3" style="background-color: #faf6f6 !important">
           <div class="row">
             <div class="col-4">{% if item.user == request.user %}<a class="btn btn-link btn-rounded btn-sm fw-bold float-start" data-mdb-ripple-color="dark" href="{% url "itemEditPage" item.id %}" >Edit</a>  {% endif %}</div>
-            <div class="col-4 justify-content-center d-flex"><b>00:00:00</b></div>
+            <div class="col-md-4 justify-content-center d-flex"><b>Posted On: {{item.createdOn}}</b></div>
             <div class="col-sm-4">
               <div class="form-group" style="">
                 <label class="control-label" style="font-weight:500;">Item Condition</label>
@@ -71,9 +71,14 @@
                 />
               </div>
               <div class="col-12">
+                {% if item.user != request.user %}
                 <div class="alert alert-info" style="padding: 8px 12px">
-                  <a class="btn d-block btn-outline-secondary" data-mdb-ripple-color="dark" href="#" role="button"> CHAT</a>
+                  <a class="btn d-block btn-outline-secondary" data-mdb-ripple-color="dark" href="
+                  {% if message.item.user != request.user %}
+                    {% url 'messageChatPage' item.id %}
+                  {% endif %}" role="button"> CHAT</a>
                 </div>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -171,7 +176,7 @@
                     <div class="col-12">
                       <hr>
                     </div>
-                    {% if item.user != request.user %}
+                    {% if item.user != request.user and item.status.name == 'Active' %}
                     <div class="col-12">
                       <label class="control-label" style="font-weight:500;">Your New Price</label>
                       <div class="form-group" style="">

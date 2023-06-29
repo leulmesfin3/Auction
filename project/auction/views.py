@@ -11,6 +11,8 @@ from django.core.paginator import Paginator
 
 
 from django.views.decorators.clickjacking import xframe_options_exempt
+from django.db.models import Q
+from django.db.models import Subquery
 # Create your views here.
 
 
@@ -444,6 +446,7 @@ def itemEditPage(request, id):
         if itemForm.is_valid():
             item = itemForm.save(commit=False)
             item.save()
+            itemForm.save_m2m()
             if old_status != itemForm['status'].value():
                 itemStatusHistory = ItemStatusHistory()
                 itemStatusHistory.user = request.user
@@ -458,7 +461,7 @@ def itemEditPage(request, id):
                 item.comment.add(comment)
             return redirect("itemPage")
     commentForm = CommentForm(prefix="commentForm")
-    itemForm = ItemForm(prefix="itemForm", instance=itemObj)
+    itemForm = ItemForm(prefix="itemForm", instance=itemObj, initial = {"category":Category.objects.filter(item__id=id).values_list("id", flat=True)})
     return render(request, 'itemForm.html', {"commentForm":commentForm, "itemForm":itemForm, "id":id})
 
 @login_required(login_url="/login/")
@@ -563,3 +566,48 @@ def usersPasswordPage(request, id):
         'class':'form-control'
     }
     return render(request, 'password.html', {"setPasswordForm":setPasswordForm, "message_danger":message_danger, "message":message})
+
+@login_required(login_url="/login/")
+def messageChatPage(request, id):
+    itemObj = get_object_or_404(Item, id=id)
+    if itemObj.user == request.user:
+        raise Http404
+    messageForm = MessageForm(request.POST or None, prefix="messageForm")
+    if request.method == "POST":
+        if messageForm.is_valid():
+            message = messageForm.save(commit=False)
+            message.message_from = request.user
+            message.message_to = itemObj.user
+            message.item = itemObj
+            message.save()
+    messageForm = MessageForm(prefix="messageForm")
+    messageList = Message.objects.filter(item = itemObj).filter(Q(message_from = request.user) | Q(message_to = request.user)).order_by("createdOn")
+    return render(request, 'message.html', { "messageForm":messageForm , "messageList":messageList} )
+
+@login_required(login_url="/login/")
+def messageChatAdminPage(request, id, user):
+    itemObj = get_object_or_404(Item, id=id)
+    userObj = get_object_or_404(User, id=user)
+    if user == request.user or itemObj.user != request.user:
+        raise Http404
+    messageForm = MessageForm(request.POST or None, prefix="messageForm")
+    if request.method == "POST":
+        if messageForm.is_valid():
+            message = messageForm.save(commit=False)
+            message.message_from = request.user
+            message.message_to = userObj
+            message.item = itemObj
+            message.save()
+    messageForm = MessageForm(prefix="messageForm")
+    messageList = Message.objects.filter(item = itemObj).filter(Q(message_from = userObj) | Q(message_to = userObj)).order_by("createdOn")
+    return render(request, 'message.html', { "messageForm":messageForm , "messageList":messageList} )
+
+@login_required(login_url="/login/")
+def messageListPage(request):
+    messageList = Message.objects.filter(
+        pk__in= Subquery(Message.objects.filter(Q(message_from = request.user) | Q(message_to = request.user)).distinct("item").values('pk'))
+    ).order_by("-createdOn")
+    paginator = Paginator(messageList, 10)  # Show 10 contacts per page.
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'messageList.html', { "page_obj":page_obj, "total_page":range(1,paginator.num_pages+1)})

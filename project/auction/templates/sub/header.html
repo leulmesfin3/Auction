@@ -40,7 +40,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link {% if 'messageList' in url_name %}active{% endif %}" href="{% url 'messageListPage' %}">
               Message
             </a>
           </li>
