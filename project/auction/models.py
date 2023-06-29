@@ -1,6 +1,7 @@
 from django.db import models
 from colorfield.fields import ColorField
 from django.contrib.auth.models import User
+import os
 
 # Create your models here.
 
@@ -127,6 +128,12 @@ class Item(models.Model):
         if price_history.filter(user = user):
             return price_history.filter(price__gt = self.last_price(user)).count() + 1
         return "-"
+    
+    def imgFileName(self):
+        return os.path.basename(self.img.name)
+    
+    def imgFilePath(self):
+        return 'img/images/' + str(os.path.basename(self.img.name))
     
     def __str__(self):
         return str(self.name)

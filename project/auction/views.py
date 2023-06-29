@@ -54,11 +54,38 @@ def logoutPage(request):
 
 @login_required(login_url="/login/")
 def homePage(request):
-    itemList = Item.objects.filter().order_by("createdOn")
+    itemList = Item.objects.filter()
+    statusRequestList = request.GET.getlist('status')
+    conditionRequestList = request.GET.getlist('condition')
+    categoryRequestList = request.GET.getlist('category')
+    search = request.GET.get('search')
+    if statusRequestList:
+        itemList = itemList.filter(status__id__in=statusRequestList)
+    if conditionRequestList:
+        itemList = itemList.filter(condition__id__in=conditionRequestList)
+    if categoryRequestList:
+        itemList = itemList.filter(category__id__in=categoryRequestList)
+    if search:
+        itemList = itemList.filter(name__icontains = search)
+    else:
+        search = "";
+    itemList = itemList.order_by("-createdOn")
     paginator = Paginator(itemList, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    return render(request, 'item.html', { "page_obj":page_obj, "total_page":range(1,paginator.num_pages+1)})
+    categoryList = Category.objects.filter(active=True).order_by("name")
+    conditionList = Condition.objects.filter(active=True).order_by("name")
+    statusList = Status.objects.filter(active=True).order_by("name")
+    return render(request, 'item.html', { "page_obj":page_obj,
+                                         "total_page":range(1,paginator.num_pages+1),
+                                         "showFilter":True,"categoryList":categoryList,
+                                         "conditionList":conditionList,
+                                         "statusList":statusList,
+                                         "statusRequestList":[int(x) for x in statusRequestList],
+                                         "conditionRequestList":[int(x) for x in conditionRequestList],
+                                         "categoryRequestList":[int(x) for x in categoryRequestList],
+                                         "search":search
+                                         })
 
 @login_required(login_url="/login/")
 def viewLotPage(request, id):
@@ -199,7 +226,7 @@ def changePasswordPage(request):
 def conditionPage(request):
     if not request.user.is_superuser: 
         raise Http404
-    conditionList = Condition.objects.filter().order_by("createdOn")
+    conditionList = Condition.objects.filter().order_by("-createdOn")
     paginator = Paginator(conditionList, 10)  # Show 10 contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -252,7 +279,7 @@ def conditionEditPage(request, id):
 def statusPage(request):
     if not request.user.is_superuser: 
         raise Http404
-    statusList = Status.objects.filter().order_by("createdOn")
+    statusList = Status.objects.filter().order_by("-createdOn")
     paginator = Paginator(statusList, 10)  # Show 10 contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -305,7 +332,7 @@ def statusEditPage(request, id):
 def categoryPage(request):
     if not request.user.is_superuser: 
         raise Http404
-    categoryList = Category.objects.filter().order_by("createdOn")
+    categoryList = Category.objects.filter().order_by("-createdOn")
     paginator = Paginator(categoryList, 10)  # Show 10 contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -356,11 +383,38 @@ def categoryEditPage(request, id):
 
 @login_required(login_url="/login/")
 def itemPage(request):
-    itemList = Item.objects.filter(user = request.user).order_by("createdOn")
+    itemList = Item.objects.filter(user = request.user)
+    statusRequestList = request.GET.getlist('status')
+    conditionRequestList = request.GET.getlist('condition')
+    categoryRequestList = request.GET.getlist('category')
+    search = request.GET.get('search')
+    if statusRequestList:
+        itemList = itemList.filter(status__id__in=statusRequestList)
+    if conditionRequestList:
+        itemList = itemList.filter(condition__id__in=conditionRequestList)
+    if categoryRequestList:
+        itemList = itemList.filter(category__id__in=categoryRequestList)
+    if search:
+        itemList = itemList.filter(name__icontains = search)
+    else:
+        search = "";
+    itemList = itemList.order_by("-createdOn")
     paginator = Paginator(itemList, 10)  # Show 10 contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    return render(request, 'item.html', { "page_obj":page_obj, "total_page":range(1,paginator.num_pages+1), "showAdd":True})
+    categoryList = Category.objects.filter(active=True).order_by("name")
+    conditionList = Condition.objects.filter(active=True).order_by("name")
+    statusList = Status.objects.filter(active=True).order_by("name")
+    return render(request, 'item.html', { "page_obj":page_obj,
+                                         "total_page":range(1,paginator.num_pages+1),
+                                         "showAdd":True,
+                                         "showFilter":True,"categoryList":categoryList,
+                                         "conditionList":conditionList,
+                                         "statusList":statusList,
+                                         "statusRequestList":[int(x) for x in statusRequestList],
+                                         "conditionRequestList":[int(x) for x in conditionRequestList],
+                                         "categoryRequestList":[int(x) for x in categoryRequestList],
+                                         "search":search})
 
 @login_required(login_url="/login/")
 def itemAddPage(request):
@@ -409,11 +463,38 @@ def itemEditPage(request, id):
 
 @login_required(login_url="/login/")
 def itemMyBidPage(request):
-    itemList = Item.objects.filter(itempricehistory__user = request.user).distinct().order_by("createdOn")
+    itemList = Item.objects.filter(itempricehistory__user = request.user).order_by("-createdOn")
+    statusRequestList = request.GET.getlist('status')
+    conditionRequestList = request.GET.getlist('condition')
+    categoryRequestList = request.GET.getlist('category')
+    search = request.GET.get('search')
+    if statusRequestList:
+        itemList = itemList.filter(status__id__in=statusRequestList)
+    if conditionRequestList:
+        itemList = itemList.filter(condition__id__in=conditionRequestList)
+    if categoryRequestList:
+        itemList = itemList.filter(category__id__in=categoryRequestList)
+    if search:
+        itemList = itemList.filter(name__icontains = search)
+    else:
+        search = "";
+    itemList = itemList.distinct().order_by("-createdOn")
     paginator = Paginator(itemList, 10)  # Show 10 contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    return render(request, 'item.html', { "page_obj":page_obj, "total_page":range(1,paginator.num_pages+1), "showAdd":False})
+    categoryList = Category.objects.filter(active=True).order_by("name")
+    conditionList = Condition.objects.filter(active=True).order_by("name")
+    statusList = Status.objects.filter(active=True).order_by("name")
+    return render(request, 'item.html', { "page_obj":page_obj,
+                                         "total_page":range(1,paginator.num_pages+1),
+                                         "showAdd":False,
+                                         "showFilter":True,"categoryList":categoryList,
+                                         "conditionList":conditionList,
+                                         "statusList":statusList,
+                                         "statusRequestList":[int(x) for x in statusRequestList],
+                                         "conditionRequestList":[int(x) for x in conditionRequestList],
+                                         "categoryRequestList":[int(x) for x in categoryRequestList],
+                                         "search":search})
 
 
 @login_required(login_url="/login/")

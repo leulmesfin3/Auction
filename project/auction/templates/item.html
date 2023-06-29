@@ -27,14 +27,87 @@
     {% include 'sub/header.html' %}
     <main class="pt-5 px-2" style="padding-bottom:57px;" >
       <div class="container-fluid container-lg  mt-5  px-lg-5 bg-white rounded-5 py-1" >
+ 
         {% if showAdd == True %}
-        <p class=" d-flex"> 
-          <div class="" style="display: flow-root;">
+        <div class="d-flex"> 
+          <div class="w-100" style="display: flow-root;">
             <a class="btn btn-link btn-rounded btn-sm fw-bold float-end" data-mdb-ripple-color="dark" href="add" >Add</a> 
           </div>
-        </p>
+        </div>
         {% endif %}
+      {% if showFilter == True %}
+      <form>
+        <div style="display: flow-root;">
+          <button
+            class="btn "
+            type="button"
+            data-mdb-toggle="collapse"
+            data-mdb-target="#filterCollapse"
+            aria-expanded="false"
+            aria-controls="filterCollapse"
+            style="float:right;"
+          >
+            Filter
+          </button>
+        </div>
+        <!-- Collapsed content -->
+        <div class="collapse mt-3" id="filterCollapse">
+          <div class="row border border-3">
+            <!-- Buttons trigger collapse -->
 
+            <div class="col-sm-6 p-2">
+              <div class="">
+                <label class="form-label m-0" for="category">Category</label>
+                <select name="category" class="form-control form-select" id="category" multiple>
+                  {% for category in categoryList %}
+                    <option value="{{category.id}}" {% if category.id in categoryRequestList %}selected{% endif %}>{{category.name}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-6 p-2">
+              <div class="">
+                <label class="form-label m-0" for="condition">Condition</label>
+                <select name="condition" class="form-control form-select" id="condition" multiple>
+                  {% for condition in conditionList %}
+                  <option value="{{condition.id}}" {% if condition.id in conditionRequestList %}selected{% endif %}>{{condition.name}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-6 p-2">
+              <div class="">
+                <label class="form-label m-0" for="status">Status</label>
+                <select name="status" class="form-control form-select" id="status" multiple>
+                  {% for status in statusList %}
+                  <option value="{{status.id}}" {% if status.id in statusRequestList %}selected{% endif %}>{{status.name}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-6 p-2  align-items-end d-flex">
+              <div class="input-group">
+                <div class="form-outline">
+                  <input type="search" id="search" name="search" value="{{search}}" class="form-control" />
+                  <label class="form-label" for="form1">Key Words</label>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12 p-2">
+              <button class="btn btn-sm btn-primary" onclick="javascript:document.getElementById('search').setAttribute('value', '');" type="reset">
+                reset
+              </button>
+              <div class="input-group" style="flex-direction: row-reverse;">
+                <button type="submit"  class="btn btn-primary">
+                  <i class="fas fa-search"></i>Search
+                </button>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </form>
+      {% endif%}
 
 
         {% for item in page_obj %}
@@ -43,9 +116,9 @@
               <div class="row">
                 <div class="col-12">
                   <img
-                    src="https://mdbcdn.b-cdn.net/img/new/standard/city/041.webp"
+                    src="{% static item.imgFilePath %}"
                     class="img-thumbnail"
-                    alt="Hollywood Sign on The Hill"
+                    alt="{{item.imgFileName}}"
                     style="min-height: 157px;"
                   />
                 </div>
