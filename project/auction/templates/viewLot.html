@@ -32,7 +32,7 @@
         
         <div class="row border rounded-5 py-3 my-3" style="background-color: #faf6f6 !important">
           <div class="row">
-            <div class="col-4"></div>
+            <div class="col-4">{% if item.user == request.user %}<a class="btn btn-link btn-rounded btn-sm fw-bold float-start" data-mdb-ripple-color="dark" href="{% url "itemEditPage" item.id %}" >Edit</a>  {% endif %}</div>
             <div class="col-4 justify-content-center d-flex"><b>00:00:00</b></div>
             <div class="col-sm-4">
               <div class="form-group" style="">
@@ -208,6 +208,66 @@
             </div>
           </div>
 
+          {% if item.user == request.user %}
+          <div class="col">
+            <table class="table table-responsive d-md-table d-block table-sm table-bordered bg-white table-striped caption-top text-nowrap ">
+              <caption>
+                List of Bids
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Bid ID</th>
+                  <th scope="col">Rank</th>
+                  <th scope="col">User Name</th>
+                  <th scope="col">Full Name</th>
+                  <th scope="col">email</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Phone</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for bidPrice in page_obj %}
+                <tr>
+                  <td>B-{{bidPrice.id|default_if_none:""}}</th>
+                  <td>{{ bidPrice.item|my_rank:bidPrice.user }}</td>
+                  <td>{{bidPrice.user.username|default_if_none:""}}</td>
+                  <td>{{bidPrice.user.first_name|default_if_none:""}} {{bidPrice.user.last_name|default_if_none:""}}</td>
+                  <td>{{bidPrice.user.email|default_if_none:""}}</td>
+                  <td>{{bidPrice.price|default_if_none:""}}</td>
+                  <td>{{bidPrice.user.userdetail.phone|default_if_none:""}}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+            <div class="">
+              <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    
+                  <li class="page-item d-sm-block d-none {% if not page_obj.has_previous %} disabled {% endif %}">
+                      <a class="page-link" href="?page=1">&laquo; First</a>
+                  </li>
+                  <li class="page-item {% if not page_obj.has_previous %} disabled {% endif %}">
+                      <a class="page-link" href="{% if page_obj.has_previous %} ?page={{ page_obj.previous_page_number }} {% endif %}">Previous</a>
+                  </li>
+                  
+                  <select class="form-control form-select" style="width: 73px;" onchange="location = '?page=' + this.value;">
+                    {% for page_no in total_page %}
+                    <option value="{{page_no}}" {% if page_no == page_obj.number %}selected{% endif %}>{{page_no}}</option>
+                    {% endfor %}
+                   </select>
+                  
+                  <li class="page-item {% if not page_obj.has_next %} disabled {% endif %}">
+                      <a class="page-link" href="{% if page_obj.has_next %} ?page={{ page_obj.next_page_number }} {% endif %}">Next</a>
+                  </li>
+                  <li class="page-item d-sm-block d-none {% if not page_obj.has_next %} disabled {% endif %}">
+                      <a class="page-link" href="{% if page_obj.has_next %} ?page={{ page_obj.paginator.num_pages }} {% endif %}">Last &raquo;</a>
+                  </li>
+                  
+                </ul>
+              </nav>
+            </div>
+          </div>
+          {% endif %}
         </div>
 
 

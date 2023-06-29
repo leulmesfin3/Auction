@@ -30,13 +30,14 @@
         <div class="" style="min-height: 75vh">
           <p>{% if id %} Edit {% else %} New {% endif %} Item</p>
           <div class="d-flex justify-content-center" style="min-height: 75vh">
-            <form action = "" method = "post" class="w-100" style="max-width: 564px;">
+            <form action = "" method = "post" class="w-100" style="max-width: 564px;" enctype="multipart/form-data">
               {% csrf_token %}
               
               <div class="form-outline my-2">
                 {{ itemForm.name }}
                 <label class="form-label" for="{{ itemForm.name.id_for_label }}">Item Name</label>
               </div>
+              {{ itemForm.img }}
               <div class="form-outline my-2">
                 {{ itemForm.starting_price }}
                 <label class="form-label" for="{{ itemForm.starting_price.id_for_label }}">Starting Price</label>

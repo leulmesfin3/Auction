@@ -15,6 +15,7 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 
 
 def route(request):
+    # return redirect('/home')
     if request.user.is_authenticated:
         return redirect('/home')
     return redirect('/login')
@@ -77,7 +78,14 @@ def viewLotPage(request, id):
         **{"min":itemObj.current_price() + itemObj.min_increase_price,
            "max":itemObj.current_price() + itemObj.max_increase_price,}
         }
-    return render(request, 'viewLot.html', {"item":itemObj, "itemBidForm":itemBidForm})    
+    bidPriceList = {}
+    if itemObj.user == request.user:
+        priceList = ItemPriceHistory.objects.filter(item = itemObj).order_by("-createdOn")
+        paginator = Paginator(priceList, 10)  # Show 10 contacts per page.
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        bidPriceList = {"page_obj":page_obj, "total_page":range(1,paginator.num_pages+1)}
+    return render(request, 'viewLot.html', { **{"item":itemObj, "itemBidForm":itemBidForm}, **bidPriceList })    
 
 def registerPage(request):
     message_danger = None
@@ -96,12 +104,28 @@ def registerPage(request):
                     message_danger = message_danger + setPasswordForm.errors[error]
             else:
                 setPasswordForm.user = user
+                user.is_active=True
                 user.save()
                 setPasswordForm.save()
                 userDetail = userDetailForm.save(commit=False)
                 userDetail.user = user
                 userDetail.save()
                 return redirect('/login')
+        else:
+            try:
+                if User.objects.filter(username=userForm['username'].value()):
+                    message_danger = "Username already taken!"
+                else:
+                    for error in userForm.errors:
+                            if not message_danger:
+                                message_danger = ""
+                            message_danger = message_danger + setPasswordForm.errors[error]
+                    for error in userDetailForm.errors:
+                            if not message_danger:
+                                message_danger = ""
+                            message_danger = message_danger + setPasswordForm.errors[error]
+            except:...
+       
     userDetailForm = UserDetailForm(prefix="userDetailForm")
     userForm = UserForm(prefix="userForm")
     setPasswordForm = SetPasswordForm(request.POST, prefix="setPasswordForm")
@@ -176,7 +200,7 @@ def conditionPage(request):
     if not request.user.is_superuser: 
         raise Http404
     conditionList = Condition.objects.filter().order_by("createdOn")
-    paginator = Paginator(conditionList, 10)  # Show 25 contacts per page.
+    paginator = Paginator(conditionList, 10)  # Show 10 contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     return render(request, 'condition.html', { "page_obj":page_obj, "total_page":range(1,paginator.num_pages+1)})
@@ -229,7 +253,7 @@ def statusPage(request):
     if not request.user.is_superuser: 
         raise Http404
     statusList = Status.objects.filter().order_by("createdOn")
-    paginator = Paginator(statusList, 10)  # Show 25 contacts per page.
+    paginator = Paginator(statusList, 10)  # Show 10 contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     return render(request, 'status.html', { "page_obj":page_obj, "total_page":range(1,paginator.num_pages+1)})
@@ -282,7 +306,7 @@ def categoryPage(request):
     if not request.user.is_superuser: 
         raise Http404
     categoryList = Category.objects.filter().order_by("createdOn")
-    paginator = Paginator(categoryList, 10)  # Show 25 contacts per page.
+    paginator = Paginator(categoryList, 10)  # Show 10 contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     return render(request, 'category.html', { "page_obj":page_obj, "total_page":range(1,paginator.num_pages+1)})
@@ -333,7 +357,7 @@ def categoryEditPage(request, id):
 @login_required(login_url="/login/")
 def itemPage(request):
     itemList = Item.objects.filter(user = request.user).order_by("createdOn")
-    paginator = Paginator(itemList, 10)  # Show 25 contacts per page.
+    paginator = Paginator(itemList, 10)  # Show 10 contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     return render(request, 'item.html', { "page_obj":page_obj, "total_page":range(1,paginator.num_pages+1), "showAdd":True})
@@ -341,7 +365,7 @@ def itemPage(request):
 @login_required(login_url="/login/")
 def itemAddPage(request):
     if request.method == "POST":
-        itemForm = ItemForm(request.POST or None, prefix="itemForm")
+        itemForm = ItemForm(request.POST or None, request.FILES, prefix="itemForm")
         if itemForm.is_valid():
             item = itemForm.save(commit=False)
             item.user = request.user
@@ -359,12 +383,19 @@ def itemAddPage(request):
 @login_required(login_url="/login/")
 def itemEditPage(request, id):
     itemObj = get_object_or_404(Item, id=id)
+    old_status = itemObj.status.id
     if request.method == "POST":
         commentForm = CommentForm(request.POST or None, prefix="commentForm")
-        itemForm = ItemForm(request.POST or None, prefix="itemForm", instance=itemObj)
+        itemForm = ItemForm(request.POST or None, request.FILES, prefix="itemForm", instance=itemObj)
         if itemForm.is_valid():
             item = itemForm.save(commit=False)
             item.save()
+            if old_status != itemForm['status'].value():
+                itemStatusHistory = ItemStatusHistory()
+                itemStatusHistory.user = request.user
+                itemStatusHistory.status = item.status
+                itemStatusHistory.item = item
+                itemStatusHistory.save()
             if commentForm.is_valid():
                 comment = commentForm.save(commit=False)
                 comment.user = request.user
@@ -379,7 +410,75 @@ def itemEditPage(request, id):
 @login_required(login_url="/login/")
 def itemMyBidPage(request):
     itemList = Item.objects.filter(itempricehistory__user = request.user).distinct().order_by("createdOn")
-    paginator = Paginator(itemList, 10)  # Show 25 contacts per page.
+    paginator = Paginator(itemList, 10)  # Show 10 contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    return render(request, 'item.html', { "page_obj":page_obj, "total_page":range(1,paginator.num_pages+1), "showAdd":True})
+    return render(request, 'item.html', { "page_obj":page_obj, "total_page":range(1,paginator.num_pages+1), "showAdd":False})
+
+
+@login_required(login_url="/login/")
+def usersPage(request):
+    if not request.user.is_superuser: 
+        raise Http404
+    userDetailList = UserDetail.objects.filter().order_by("user__pk")
+    paginator = Paginator(userDetailList, 10)  # Show 10 contacts per page.
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'users.html', { "page_obj":page_obj, "total_page":range(1,paginator.num_pages+1)})
+
+@login_required(login_url="/login/")
+def usersEditPage(request, id):
+    if not request.user.is_superuser: 
+        raise Http404
+    message_danger = None
+    userObj = get_object_or_404(User, id=id)
+    userDetailObj = get_object_or_404(UserDetail, user=userObj)
+    if request.method == "POST":
+        userForm = UserForm(request.POST or None, prefix="userForm", instance = userObj)
+        userDetailForm = UserDetailForm(request.POST or None, prefix="userDetailForm", instance = userDetailObj)
+        commentForm = CommentForm(request.POST or None, prefix="commentForm")
+        if userForm.is_valid():
+            user = userForm.save(commit=False)
+            user.save()
+        if userDetailForm.is_valid():
+            userDetail = userDetailForm.save(commit=False)
+            userDetail.save()
+        if commentForm.is_valid():
+            comment = commentForm.save(commit=False)
+            comment.user = request.user
+            comment.text = "Edit:_" + comment.text
+            comment.save()
+            userDetail.comment.add(comment)
+    userForm = UserForm(prefix="userForm", instance = userObj)
+    userDetailForm = UserDetailForm(prefix="userDetailForm", instance = userDetailObj)
+    commentForm = CommentForm(prefix="commentForm")
+    return render(request, 'editProfile.html', {"userForm":userForm, "userDetailForm":userDetailForm, "message_danger":message_danger, "commentForm":commentForm })
+
+@login_required(login_url="/login/")
+def usersPasswordPage(request, id):
+    if not request.user.is_superuser: 
+        raise Http404
+    message_danger = None
+    message = None
+    userObj = get_object_or_404(User, id=id)
+    if request.method == "POST":
+        setPasswordForm = SetPasswordForm(userObj, request.POST, prefix="setPasswordForm")
+        if not setPasswordForm.is_valid():
+            print(1)
+            for error in setPasswordForm.errors:
+                if not message_danger:
+                    message_danger = ""
+                message_danger = message_danger + setPasswordForm.errors[error]
+        else:
+            print(2)
+            setPasswordForm.user = userObj
+            setPasswordForm.save()
+            message = "Password Updated"
+    setPasswordForm = SetPasswordForm(userObj, prefix="setPasswordForm")
+    setPasswordForm.fields['new_password1'].widget.attrs = {
+        'class':'form-control'
+    }
+    setPasswordForm.fields['new_password2'].widget.attrs = {
+        'class':'form-control'
+    }
+    return render(request, 'password.html', {"setPasswordForm":setPasswordForm, "message_danger":message_danger, "message":message})

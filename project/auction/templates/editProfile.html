@@ -21,11 +21,12 @@
     <!-- MDB -->
     <link rel="stylesheet" href="{% static 'css/mdb.min.css' %}" />
   </head>
-  <body>
+  <body style="background-color: #f4f4f4;">
     <!-- Start your project here-->
 
     {% include 'sub/header.html' %}
-    <main>
+   
+    <main class="pt-5 px-2" style="padding-bottom:57px;" >
       <div class="container">
         <div class="d-flex justify-content-center align-items-center" style="min-height: 91vh">
           <div class="text-center" style="width: 500px;">
@@ -39,6 +40,12 @@
                   {% csrf_token %}
                   <!-- Email input -->
                   <div class="mb-2 text-start text-danger {% if message_danger == None %}d-none {% endif %}">{{message_danger  |safe }}</div>
+                  {% if request.user.is_superuser and commentForm %}
+                  <div class="form-check  my-2">
+                    {{ userForm.is_active }}
+                    <label class="form-check-label" for="{{ userForm.is_active.id_for_label }}">Active</label>
+                  </div>
+                  {% endif %}
                   <div class="form-outline my-2">
                     {{ userForm.username }}
                     <label class="form-label" for="{{ userForm.username.id_for_label }}">User Name</label>
@@ -59,8 +66,17 @@
                     {{ userDetailForm.phone }}
                     <label class="form-label" for="{{ userDetailForm.phone.id_for_label }}">Phone</label>
                   </div>
+                  {% if request.user.is_superuser and commentForm %}
+                  <div class="form-outline my-2">
+                    {{commentForm.text}}
+                    <label class="form-label" for="{{commentForm.text.id_for_label}}">Write comment here.</label>
+                  </div>
+                  {% endif %}
                   <!-- Submit button -->
                   <button type="submit" class="btn btn-primary btn-block mb-4">Update</button>
+                  {% if request.user.is_superuser and commentForm  %}
+                  <a class="btn btn-primary btn-block mb-4" href="password">Change Password</a>
+                  {% endif %}
                 </form>
               </div>
             </div>

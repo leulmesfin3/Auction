@@ -40,22 +40,23 @@ class ActivityLog(models.Model):
     def __str__(self):
         return str(str(self.user) + " => " + self.module+ " => " + str(self.createdOn))
     
-    
-class UserDetail(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null= False, primary_key=True) 
-    phone = models.CharField(max_length=30, null=True, blank=True) 
-    createdOn = models.DateTimeField( auto_now_add=True, blank=True, null=True, editable=True)
-    updatedOn = models.DateTimeField(auto_now=True, null=True, blank=True)
-    def __str__(self):
-        return str(self.user)
-    
 class Comment(models.Model):
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
     text = models.TextField(null=False, blank=False)
     createdOn = models.DateTimeField( auto_now_add=True, blank=True, null=True, editable=True)
     updatedOn = models.DateTimeField(auto_now=True, null=True, blank=True)
     def __str__(self):
-        return str(self.text)
+        return str(self.text)    
+    
+class UserDetail(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null= False, primary_key=True) 
+    phone = models.CharField(max_length=30, null=True, blank=True) 
+    createdOn = models.DateTimeField( auto_now_add=True, blank=True, null=True, editable=True)
+    updatedOn = models.DateTimeField(auto_now=True, null=True, blank=True)
+    comment =  models.ManyToManyField(Comment, blank=True)
+    def __str__(self):
+        return str(self.user)
+
     
 class Condition(models.Model):
     name = models.CharField(max_length=60, null=False, blank=False)
@@ -88,6 +89,7 @@ class Status(models.Model):
 
 
 class Item(models.Model):
+    img = models.ImageField(upload_to = "auction/static/img/images/", null=True, blank=True)
     name = models.CharField(max_length=60, null=False, blank=False)
     starting_price = models.DecimalField(null=False, blank=False, max_digits=8, decimal_places=2, default=0.0)
     min_increase_price = models.DecimalField(null=False, blank=False, max_digits=8, decimal_places=2, default=0.0)

@@ -6,7 +6,7 @@ class UserForm(forms.ModelForm):
     # confirmPassword = forms.CharField(widget=forms.PasswordInput),"confirmPassword", "password"
     class Meta:
         model = User
-        fields = ("username", "first_name" , "last_name", "email")
+        fields = ("username", "first_name" , "last_name", "email", "is_active")
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -74,7 +74,8 @@ class CategoryForm(forms.ModelForm):
 class ItemForm(forms.ModelForm):
     class Meta:
         model = Item
-        fields = ("name", 
+        fields = ("img",
+                  "name", 
                   "starting_price", 
                   "min_increase_price", 
                   "max_increase_price", 

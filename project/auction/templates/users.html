@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Condition</title>
+    <title>Users</title>
     <!-- MDB icon -->
     <link rel="icon" href="img/mdb-favicon.ico" type="image/x-icon" />
     <!-- Font Awesome -->
@@ -29,31 +29,35 @@
       <div class="container-fluid container-lg  mt-5  px-lg-5 bg-white rounded-5 py-1" >
         <div class="" style="min-height: 75vh">
           <div class="table-responsive">
-            <a class="btn btn-link btn-rounded btn-sm fw-bold float-end" data-mdb-ripple-color="dark" href="add" >Add</a>
+            {% comment %} <a class="btn btn-link btn-rounded btn-sm fw-bold float-end" data-mdb-ripple-color="dark" href="add" >Add</a> {% endcomment %}
             <table class="table table-responsive d-md-table d-block table-sm table-bordered  table-striped caption-top text-nowrap ">
               <caption>
-                List of Condition
+                List of Users
               </caption>
               <thead>
                 <tr>
                   <th scope="col">ID</th>
-                  <th scope="col">Name</th>
+                  <th scope="col">User Name</th>
+                  <th scope="col">Email</th>
+                  <th scope="col">Phone No</th>
                   <th scope="col">Status</th>
                   <th scope="col">Remark</th>
                   <th scope="col">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {% for condition in page_obj %}
+                {% for userDetail in page_obj %}
                 <tr>
-                  <td>{{condition.id|default_if_none:""}}</th>
-                  <td>{{condition.name|default_if_none:""}}</td>
-                  <td>{% if condition.active == True %}<i class="fas fa-check text-success me-2"></i>Yes{% else %}<i class="fas fa-xmark text-danger me-2"></i>No{% endif%}</td>
+                  <td>{{userDetail.user.id|default_if_none:""}}</th>
+                  <td>{{userDetail.user.username|default_if_none:""}}</td>
+                  <td>{{userDetail.user.email|default_if_none:""}}</td>
+                  <td>{{userDetail.phone|default_if_none:""}}</td>
+                  <td>{% if userDetail.user.is_active == True %}<i class="fas fa-check text-success me-2"></i>Yes{% else %}<i class="fas fa-xmark text-danger me-2"></i>No{% endif%}</td>
                   <td>
-                    <a class="btn btn-link btn-rounded btn-sm fw-bold" onclick="showGeneralModal('/comment/condition/{{condition.id|default_if_none:""}}/', 'Comment')" data-mdb-ripple-color="dark">{{condition.comment.count}}</a>
+                    <a class="btn btn-link btn-rounded btn-sm fw-bold" onclick="showGeneralModal('/comment/userDetail/{{userDetail.id|default_if_none:""}}/', 'Comment')" data-mdb-ripple-color="dark">{{userDetail.comment.count}}</a>
                   </td>
                   <td>
-                    <a class="btn btn-link btn-rounded btn-sm fw-bold" href="edit/{{condition.id}}/" data-mdb-ripple-color="dark">Edit</a>
+                    <a class="btn btn-link btn-rounded btn-sm fw-bold" href="{% url 'usersEditPage' userDetail.user.id %}" data-mdb-ripple-color="dark">Edit</a>
                   </td>
                 </tr>
                 {% endfor %}

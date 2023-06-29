@@ -53,11 +53,23 @@
               role="button"
               data-mdb-toggle="dropdown"
               aria-expanded="false"
-            >Configure</a>
+            >configuration</a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item {% if 'condition' in url_name %}active{% endif %}" href="{% url 'conditionPage' %}">Condition</a></li>
               <li><a class="dropdown-item {% if 'category' in url_name %}active{% endif %}" href="{% url 'categoryPage' %}">Category</a></li>
+              <li><a class="dropdown-item {% if 'condition' in url_name %}active{% endif %}" href="{% url 'conditionPage' %}">Condition</a></li>
               <li><a class="dropdown-item {% if 'status' in url_name %}active{% endif %}" href="{% url 'statusPage' %}">Status</a></li>
+            </ul>
+          <li class="nav-item me-3 me-lg-0  d-sm-inline-block dropdown">
+            <a
+              class="nav-link dropdown-toggle {% if 'users' in url_name %}active{% endif %}"
+              href="#"
+              id="navbarDropdown"
+              role="button"
+              data-mdb-toggle="dropdown"
+              aria-expanded="false"
+            >Administration</a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item {% if 'users' in url_name %}active{% endif %}" href="{% url 'usersPage' %}">Users</a></li>
             </ul>
           {% endif %}
         </ul>

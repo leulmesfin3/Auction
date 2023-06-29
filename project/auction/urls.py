@@ -31,5 +31,9 @@ urlpatterns = [
     path('item/edit/<int:id>/', itemEditPage, name ="itemEditPage"),
     
     path('itemMyBid/', itemMyBidPage, name ="itemMyBidPage"),
+    
+    path('users/', usersPage, name ="usersPage"),
+    path('users/edit/<int:id>/', usersEditPage, name ="usersEditPage"),
+    path('users/edit/<int:id>/password', usersPasswordPage, name ="usersPasswordPage"),
 ]
                
